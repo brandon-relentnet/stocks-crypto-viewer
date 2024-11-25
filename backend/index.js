@@ -6,6 +6,8 @@ const express = require('express');
 const WebSocket = require('ws');
 const http = require('http');
 const socketIo = require('socket.io');
+const fs = require('fs');
+const path = require('path');
 
 // Initialize Express app and server port
 const app = express();
@@ -37,9 +39,34 @@ const io = socketIo(server, {
     },
 });
 
+// File to store active subscriptions
+const SUBSCRIPTIONS_FILE = path.join(__dirname, 'subscriptions.json');
+
 // Store dynamically subscribed stock symbols and the latest prices
 const activeSubscriptions = new Set();
 const latestPrices = {};
+
+// Helper function to save subscriptions to a file
+const saveSubscriptionsToFile = () => {
+    fs.writeFileSync(SUBSCRIPTIONS_FILE, JSON.stringify(Array.from(activeSubscriptions)), 'utf8');
+};
+
+// Helper function to load subscriptions from a file
+const loadSubscriptionsFromFile = () => {
+    if (fs.existsSync(SUBSCRIPTIONS_FILE)) {
+        try {
+            const data = fs.readFileSync(SUBSCRIPTIONS_FILE, 'utf8');
+            const symbols = JSON.parse(data);
+            symbols.forEach((symbol) => activeSubscriptions.add(symbol));
+            console.log('Loaded subscriptions from file:', symbols);
+        } catch (error) {
+            console.error('Error reading subscriptions file:', error);
+        }
+    }
+};
+
+// Load subscriptions from file on server start
+loadSubscriptionsFromFile();
 
 // Helper function to create Finnhub WebSocket
 const createFinnhubWebSocket = () => new WebSocket(FINNHUB_WS_URL);
@@ -53,6 +80,7 @@ const subscribeToSymbol = (symbol) => {
     if (!activeSubscriptions.has(symbol)) {
         finnhubSocket.send(JSON.stringify({ type: 'subscribe', symbol }));
         activeSubscriptions.add(symbol);
+        saveSubscriptionsToFile();
         console.log(`Subscribed to ${symbol}`);
     }
 };
@@ -62,6 +90,7 @@ const unsubscribeFromSymbol = (symbol) => {
     if (activeSubscriptions.has(symbol)) {
         finnhubSocket.send(JSON.stringify({ type: 'unsubscribe', symbol }));
         activeSubscriptions.delete(symbol);
+        saveSubscriptionsToFile();
         console.log(`Unsubscribed from ${symbol}`);
     }
 };

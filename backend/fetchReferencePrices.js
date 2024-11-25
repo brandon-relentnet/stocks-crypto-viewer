@@ -4,7 +4,12 @@ import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 import cron from 'node-cron';
 import { promises as fs } from 'fs';
+import { fileURLToPath } from 'url';
 import path from 'path';
+
+// Get the current directory equivalent to __dirname in CommonJS
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Initialize environment variables
 dotenv.config();

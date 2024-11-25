@@ -1,14 +1,27 @@
-// RealTimeStockData.jsx
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import Subscribe from './Subscribe'; // Import the Subscribe component
 
 const RealTimeStockData = () => {
     const [stockData, setStockData] = useState([]);
+    const [subscribedSymbols, setSubscribedSymbols] = useState([]);
     const [loading, setLoading] = useState(true);
-    const symbols = ['AAPL', 'GOOGL', 'MSFT'];
 
     useEffect(() => {
         const socket = io('http://localhost:4000');
+
+        // Fetch the current list of subscriptions
+        const fetchSubscribedSymbols = async () => {
+            try {
+                const response = await fetch('http://localhost:4000/subscriptions');
+                const data = await response.json();
+                setSubscribedSymbols(data.activeSubscriptions || []);
+            } catch (error) {
+                console.error('Error fetching subscriptions:', error);
+            }
+        };
+
+        fetchSubscribedSymbols();
 
         socket.on('connect', () => {
             console.log('Connected to server via Socket.IO');
@@ -43,21 +56,30 @@ const RealTimeStockData = () => {
         };
     }, []);
 
+    const handleNewSubscription = (newSubscriptions) => {
+        setSubscribedSymbols(newSubscriptions); // Update the subscribed symbols list
+    };
+
     if (loading) return <div>Loading...</div>;
 
     return (
         <div>
             <h1>Real-Time Stock Prices</h1>
-            {symbols.map((symbol) => {
-                const stock = stockData.find((s) => s.symbol === symbol);
-                return (
-                    <div key={symbol}>
-                        <h2>{symbol}</h2>
-                        <p>Price: {stock ? stock.price : 'No data available yet...'}</p>
-                        <p>Timestamp: {stock ? new Date(stock.timestamp).toLocaleTimeString() : ''}</p>
-                    </div>
-                );
-            })}
+            <Subscribe onSubscription={handleNewSubscription} />
+            {subscribedSymbols.length === 0 ? (
+                <p>No symbols subscribed yet...</p>
+            ) : (
+                subscribedSymbols.map((symbol) => {
+                    const stock = stockData.find((s) => s.symbol === symbol);
+                    return (
+                        <div key={symbol}>
+                            <h2>{symbol}</h2>
+                            <p>Price: {stock ? stock.price : 'No data available yet...'}</p>
+                            <p>Timestamp: {stock ? new Date(stock.timestamp).toLocaleTimeString() : ''}</p>
+                        </div>
+                    );
+                })
+            )}
         </div>
     );
 };

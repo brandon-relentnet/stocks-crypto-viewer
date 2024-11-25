@@ -17,17 +17,19 @@ if (!API_KEY) {
     process.exit(1);
 }
 
-// Stock symbols to subscribe to
-const symbols = ['AAPL', 'GOOGL', 'MSFT'];
-
 // Finnhub WebSocket URL and trade event type constants
 const FINNHUB_WS_URL = `wss://ws.finnhub.io?token=${API_KEY}`;
 const TRADE_EVENT_TYPE = 'trade';
 
+// Enable CORS and JSON body parsing
 const cors = require('cors');
 app.use(cors());
+app.use(express.json()); // For parsing application/json in POST requests
 
+// Create an HTTP server using the Express app
 const server = http.createServer(app);
+
+// Initialize Socket.IO for real-time communication with clients
 const io = socketIo(server, {
     cors: {
         origin: '*',
@@ -35,41 +37,43 @@ const io = socketIo(server, {
     },
 });
 
-// Store the latest prices for subscribed stocks
+// Store dynamically subscribed stock symbols and the latest prices
+const activeSubscriptions = new Set();
 const latestPrices = {};
-
-// Handle new client connections
-io.on('connection', (socket) => {
-    console.log('Client connected');
-    socket.on('disconnect', () => console.log('Client disconnected'));
-
-    // Send initial stock data to the client
-    const initialData = Object.entries(latestPrices).map(([symbol, { price, timestamp }]) => ({
-        symbol,
-        price,
-        timestamp,
-    }));
-    socket.emit('initialData', initialData);
-});
 
 // Helper function to create Finnhub WebSocket
 const createFinnhubWebSocket = () => new WebSocket(FINNHUB_WS_URL);
-
-// Helper function to manage subscriptions
-const handleSubscription = (action) => {
-    symbols.forEach((symbol) => {
-        finnhubSocket.send(JSON.stringify({ type: action, symbol }));
-    });
-};
 
 // Initialize WebSocket connection
 let finnhubSocket = createFinnhubWebSocket();
 let reconnecting = false;
 
+// Helper function to subscribe to a single symbol
+const subscribeToSymbol = (symbol) => {
+    if (!activeSubscriptions.has(symbol)) {
+        finnhubSocket.send(JSON.stringify({ type: 'subscribe', symbol }));
+        activeSubscriptions.add(symbol);
+        console.log(`Subscribed to ${symbol}`);
+    }
+};
+
+// Helper function to unsubscribe from a single symbol
+const unsubscribeFromSymbol = (symbol) => {
+    if (activeSubscriptions.has(symbol)) {
+        finnhubSocket.send(JSON.stringify({ type: 'unsubscribe', symbol }));
+        activeSubscriptions.delete(symbol);
+        console.log(`Unsubscribed from ${symbol}`);
+    }
+};
+
+// WebSocket initialization and reconnection handling
 const initializeFinnhubWebSocket = () => {
     finnhubSocket.on('open', () => {
         console.log('Connected to Finnhub WebSocket');
-        handleSubscription('subscribe');
+        // Resubscribe to all active symbols
+        activeSubscriptions.forEach((symbol) => {
+            finnhubSocket.send(JSON.stringify({ type: 'subscribe', symbol }));
+        });
     });
 
     finnhubSocket.on('message', (data) => {
@@ -83,6 +87,7 @@ const initializeFinnhubWebSocket = () => {
                     return;
                 }
 
+                // Update latest prices and broadcast to clients
                 latestPrices[symbol] = { price, timestamp };
                 io.emit('stockData', { symbol, price, timestamp });
             });
@@ -110,9 +115,45 @@ const initializeFinnhubWebSocket = () => {
 // Start WebSocket connection
 initializeFinnhubWebSocket();
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({ status: 'chillin yo', subscribedSymbols: symbols });
+// Handle new client connections via Socket.IO
+io.on('connection', (socket) => {
+    console.log('Client connected');
+    socket.on('disconnect', () => console.log('Client disconnected'));
+
+    // Send initial stock data to the client
+    const initialData = Object.entries(latestPrices).map(([symbol, { price, timestamp }]) => ({
+        symbol,
+        price,
+        timestamp,
+    }));
+    socket.emit('initialData', initialData);
+});
+
+// API endpoint to add a new symbol
+app.post('/subscribe', (req, res) => {
+    const { symbol } = req.body;
+    if (!symbol) {
+        return res.status(400).json({ error: 'Symbol is required' });
+    }
+
+    subscribeToSymbol(symbol);
+    res.json({ message: `Subscription for ${symbol} added`, activeSubscriptions: Array.from(activeSubscriptions) });
+});
+
+// API endpoint to remove a symbol
+app.post('/unsubscribe', (req, res) => {
+    const { symbol } = req.body;
+    if (!symbol) {
+        return res.status(400).json({ error: 'Symbol is required' });
+    }
+
+    unsubscribeFromSymbol(symbol);
+    res.json({ message: `Subscription for ${symbol} removed`, activeSubscriptions: Array.from(activeSubscriptions) });
+});
+
+// API endpoint to list all active subscriptions
+app.get('/subscriptions', (req, res) => {
+    res.json({ activeSubscriptions: Array.from(activeSubscriptions) });
 });
 
 // Start the server

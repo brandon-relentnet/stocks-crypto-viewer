@@ -1,131 +1,140 @@
-// index.js
+// Load environment variables from a .env file
 require('dotenv').config();
+
+// Import required modules
 const express = require('express');
-const WebSocket = require('ws');
-const Database = require('better-sqlite3');
-const http = require('http'); // Import http module
-const socketIo = require('socket.io'); // Import Socket.IO
+const WebSocket = require('ws'); // For connecting to Finnhub WebSocket API
+const http = require('http'); // HTTP server module
+const socketIo = require('socket.io'); // For real-time communication with clients via WebSockets
 
+// Initialize Express app and server port
 const app = express();
-const PORT = process.env.PORT || 4000; // Change the port to avoid conflicts
-const API_KEY = process.env.FINNHUB_API_KEY;
-const symbols = ['AAPL', 'GOOGL', 'MSFT'];
+const PORT = process.env.PORT || 4000; // Use port from environment or default to 4000
+const API_KEY = process.env.FINNHUB_API_KEY; // Finnhub API key from .env file
 
+// Validate the API key before starting the server
+if (!API_KEY) {
+    console.error('FINNHUB_API_KEY is missing. Please set it in your .env file.');
+    process.exit(1); // Exit the application with an error code
+}
+
+// List of stock symbols to subscribe to
+const symbols = ['AAPL', 'GOOGL', 'MSFT']; // Example: Apple, Google, Microsoft
+
+// Finnhub WebSocket URL and trade event type constants
+const FINNHUB_WS_URL = `wss://ws.finnhub.io?token=${API_KEY}`;
+const TRADE_EVENT_TYPE = 'trade';
+
+// Enable CORS (Cross-Origin Resource Sharing) for the Express app
 const cors = require('cors');
 app.use(cors());
 
-// Create an HTTP server
+// Create an HTTP server using the Express app
 const server = http.createServer(app);
 
-// Set up Socket.IO with CORS configuration
+// Initialize Socket.IO for real-time communication with clients
 const io = socketIo(server, {
     cors: {
-        origin: '*',
-        methods: ['GET', 'POST'],
+        origin: '*', // Allow requests from any origin
+        methods: ['GET', 'POST'], // Allow GET and POST methods
     },
 });
 
-// Set up SQLite database
-const db = new Database('stock_data.db');
+// Object to store the latest prices and timestamps for subscribed stocks
+const latestPrices = {};
 
-// Create a table to store stock prices
-db.exec(`
-  CREATE TABLE IF NOT EXISTS stocks (
-    symbol TEXT,
-    price REAL,
-    timestamp INTEGER
-  )
-`);
+// Middleware to log client connections and disconnections
+io.use((socket, next) => {
+    console.log('Client connected');
+    socket.on('disconnect', () => console.log('Client disconnected'));
+    next();
+});
 
-// Function to insert data into the database
-const insertStockData = db.prepare(`
-  INSERT INTO stocks (symbol, price, timestamp) VALUES (?, ?, ?)
-`);
-
-// Handle Socket.IO client connections
+// Handle new client connections via Socket.IO
 io.on('connection', (socket) => {
-    console.log('Client connected via Socket.IO');
-
-    // Send initial data to the client
-    const stocks = db
-        .prepare(
-            `
-      SELECT symbol, price, timestamp
-      FROM (
-        SELECT *, ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY timestamp DESC) AS rn
-        FROM stocks
-      ) WHERE rn = 1
-    `
-        )
-        .all();
-
-    socket.emit('initialData', stocks);
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
+    // Send initial stock data (if available) to the newly connected client
+    const initialData = Object.entries(latestPrices).map(([symbol, { price, timestamp }]) => ({
+        symbol,
+        price,
+        timestamp,
+    }));
+    socket.emit('initialData', initialData);
 });
 
-// Set up the WebSocket connection to Finnhub
-const finnhubSocket = new WebSocket(`wss://ws.finnhub.io?token=${API_KEY}`);
+// Initialize a WebSocket connection to Finnhub's API
+let finnhubSocket = new WebSocket(FINNHUB_WS_URL);
 
-finnhubSocket.on('open', () => {
-    console.log('Connected to Finnhub WebSocket');
-    // Subscribe to stock symbols
-    symbols.forEach((symbol) => {
-        finnhubSocket.send(JSON.stringify({ type: 'subscribe', symbol }));
-    });
-});
+// Debounce reconnect attempts to avoid overlapping reconnections
+let reconnecting = false;
 
-finnhubSocket.on('message', (data) => {
-    const message = JSON.parse(data);
-    if (message.type === 'trade') {
-        message.data.forEach((trade) => {
-            const { s: symbol, p: price, t: timestamp } = trade;
-            insertStockData.run(symbol, price, timestamp);
-            // Emit the data to connected clients via Socket.IO
-            io.emit('stockData', { symbol, price, timestamp });
+// Function to handle the Finnhub WebSocket connection
+const initializeFinnhubWebSocket = () => {
+    // Handle WebSocket open event (connection established)
+    finnhubSocket.on('open', () => {
+        console.log('Connected to Finnhub WebSocket');
+        // Subscribe to stock symbols
+        symbols.forEach((symbol) => {
+            finnhubSocket.send(JSON.stringify({ type: 'subscribe', symbol }));
         });
-    }
+    });
+
+    // Handle incoming WebSocket messages (stock data updates)
+    finnhubSocket.on('message', (data) => {
+        const message = JSON.parse(data); // Parse the incoming message
+        if (message.type === TRADE_EVENT_TYPE) { // Process trade updates
+            message.data.forEach((trade) => {
+                const { s: symbol, p: price, t: timestamp } = trade;
+
+                // Validate trade data to ensure completeness
+                if (!symbol || !price || !timestamp) {
+                    console.warn('Received incomplete trade data:', trade);
+                    return; // Skip processing this trade
+                }
+
+                // Update the latest prices object with new data
+                latestPrices[symbol] = { price, timestamp };
+                // Broadcast updated stock data to all connected clients
+                io.emit('stockData', { symbol, price, timestamp });
+            });
+        }
+    });
+
+    // Handle WebSocket error event
+    finnhubSocket.on('error', (error) => {
+        console.error('WebSocket error:', error);
+    });
+
+    // Handle WebSocket close event (connection lost or closed)
+    finnhubSocket.on('close', (code, reason) => {
+        console.log(`WebSocket closed: ${code} ${reason}`);
+
+        // Cleanly unsubscribe from all symbols on close
+        symbols.forEach((symbol) => {
+            finnhubSocket.send(JSON.stringify({ type: 'unsubscribe', symbol }));
+        });
+
+        // Reconnect if the connection was not closed cleanly
+        if (code !== 1000 && !reconnecting) { // 1000 indicates a normal closure
+            reconnecting = true;
+            setTimeout(() => {
+                console.log('Reconnecting to Finnhub WebSocket...');
+                finnhubSocket = new WebSocket(FINNHUB_WS_URL);
+                initializeFinnhubWebSocket(); // Reinitialize the WebSocket connection
+                reconnecting = false;
+            }, 5000); // Wait 5 seconds before attempting to reconnect
+        }
+    });
+};
+
+// Start the Finnhub WebSocket connection
+initializeFinnhubWebSocket();
+
+// Serve a simple health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'chillin yo', subscribedSymbols: symbols });
 });
 
-finnhubSocket.on('error', (error) => {
-    console.error('WebSocket error:', error);
-});
-
-finnhubSocket.on('close', (code, reason) => {
-    console.log(`WebSocket closed: ${code} ${reason}`);
-    // I'll implement reconnection logic later
-});
-
-// Express route to fetch the latest price for all symbols
-app.get('/api/stocks', (req, res) => {
-    const stocks = db
-        .prepare(
-            `
-      SELECT symbol, price, timestamp
-      FROM (
-        SELECT *, ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY timestamp DESC) AS rn
-        FROM stocks
-      ) WHERE rn = 1
-    `
-        )
-        .all();
-
-    res.json(stocks);
-});
-
-// Express route to fetch historical data for a specific symbol
-app.get('/api/stocks/:symbol', (req, res) => {
-    const { symbol } = req.params;
-    const data = db
-        .prepare('SELECT symbol, price, timestamp FROM stocks WHERE symbol = ? ORDER BY timestamp DESC')
-        .all(symbol);
-
-    res.json(data);
-});
-
-// Start the server
+// Start the HTTP server
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

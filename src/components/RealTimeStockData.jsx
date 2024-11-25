@@ -53,7 +53,7 @@ const RealTimeStockData = () => {
                 return (
                     <div key={symbol}>
                         <h2>{symbol}</h2>
-                        <p>Price: {stock ? stock.price : 'No data available'}</p>
+                        <p>Price: {stock ? stock.price : 'No data available yet...'}</p>
                         <p>Timestamp: {stock ? new Date(stock.timestamp).toLocaleTimeString() : ''}</p>
                     </div>
                 );

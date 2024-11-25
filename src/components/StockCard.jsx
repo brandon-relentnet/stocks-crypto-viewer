@@ -5,7 +5,6 @@ const StockCard = ({ symbol, stock }) => {
         <div className='mb-4 p-4 bg-surface0 rounded w-80'>
             <h2>{symbol}</h2>
             <p>Price: {stock ? stock.price : 'Loading...'}</p>
-            <p>Timestamp: {stock ? new Date(stock.timestamp).toLocaleTimeString() : ''}</p>
         </div>
     );
 }

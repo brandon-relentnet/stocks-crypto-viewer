@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.cjs",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,9 +12,11 @@
   "dependencies": {
     "axios": "^1.7.7",
     "better-sqlite3": "^11.5.0",
+    "chokidar": "^4.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "socket.io": "^4.8.1",
     "websocket": "^1.0.35",

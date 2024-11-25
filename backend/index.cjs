@@ -1,3 +1,5 @@
+// index.cjs
+
 // Load environment variables from a .env file
 require('dotenv').config();
 
@@ -8,6 +10,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const fs = require('fs');
 const path = require('path');
+const chokidar = require('chokidar');
 
 // Initialize Express app and server port
 const app = express();
@@ -46,6 +49,12 @@ const SUBSCRIPTIONS_FILE = path.join(__dirname, 'subscriptions.json');
 const activeSubscriptions = new Set();
 const latestPrices = {};
 
+// Path to referencePrices.json
+const REFERENCE_PRICES_FILE = path.join(__dirname, 'referencePrices.json');
+
+// In-memory store for reference prices
+let referencePricesMap = new Map();
+
 // Helper function to save subscriptions to a file
 const saveSubscriptionsToFile = () => {
     fs.writeFileSync(SUBSCRIPTIONS_FILE, JSON.stringify(Array.from(activeSubscriptions)), 'utf8');
@@ -74,6 +83,42 @@ const createFinnhubWebSocket = () => new WebSocket(FINNHUB_WS_URL);
 // Initialize WebSocket connection
 let finnhubSocket = createFinnhubWebSocket();
 let reconnecting = false;
+
+// Function to load reference prices from the JSON file
+function loadReferencePrices() {
+    try {
+        const data = fs.readFileSync(REFERENCE_PRICES_FILE, 'utf8');
+        const referencePricesArray = JSON.parse(data);
+
+        // Convert array to Map for quick lookup
+        referencePricesMap = new Map();
+        referencePricesArray.forEach(item => {
+            referencePricesMap.set(item.symbol, {
+                previousClose: item.previousClose,
+                timestamp: item.timestamp
+            });
+        });
+
+        console.log('Reference prices loaded successfully.');
+    } catch (error) {
+        console.error('Error loading reference prices:', error);
+    }
+}
+
+// Initial load
+loadReferencePrices();
+
+// Watch for changes in referencePrices.json and reload
+const watcher = chokidar.watch(REFERENCE_PRICES_FILE, {
+    persistent: true,
+    usePolling: true, // Use polling for better cross-platform compatibility
+    interval: 1000 // Check for changes every second
+});
+
+watcher.on('change', () => {
+    console.log('referencePrices.json has changed. Reloading...');
+    loadReferencePrices();
+});
 
 // Helper function to subscribe to a single symbol
 const subscribeToSymbol = (symbol) => {
@@ -116,9 +161,35 @@ const initializeFinnhubWebSocket = () => {
                     return;
                 }
 
+                // Retrieve previousClose from referencePricesMap
+                const refPriceData = referencePricesMap.get(symbol);
+                const previousClose = refPriceData ? refPriceData.previousClose : null;
+
+                // Calculate price change and percentage change
+                let priceChange = null;
+                let percentageChange = null;
+                let direction = null;
+
+                if (previousClose !== null) {
+                    priceChange = price - previousClose;
+                    percentageChange = (priceChange / previousClose) * 100;
+                    direction = priceChange > 0 ? 'up' : (priceChange < 0 ? 'down' : 'no-change');
+                }
+
+                // Prepare the data to emit
+                const stockData = {
+                    symbol,
+                    price,
+                    timestamp,
+                    previousClose,
+                    priceChange: priceChange !== null ? priceChange.toFixed(2) : null,
+                    percentageChange: percentageChange !== null ? percentageChange.toFixed(2) : null,
+                    direction
+                };
+
                 // Update latest prices and broadcast to clients
                 latestPrices[symbol] = { price, timestamp };
-                io.emit('stockData', { symbol, price, timestamp });
+                io.emit('stockData', stockData);
             });
         }
     });
@@ -149,12 +220,32 @@ io.on('connection', (socket) => {
     console.log('Client connected');
     socket.on('disconnect', () => console.log('Client disconnected'));
 
-    // Send initial stock data to the client
-    const initialData = Object.entries(latestPrices).map(([symbol, { price, timestamp }]) => ({
-        symbol,
-        price,
-        timestamp,
-    }));
+    // Send initial stock data to the client, including previousClose
+    const initialData = Object.entries(latestPrices).map(([symbol, { price, timestamp }]) => {
+        const refPriceData = referencePricesMap.get(symbol);
+        const previousClose = refPriceData ? refPriceData.previousClose : null;
+
+        let priceChange = null;
+        let percentageChange = null;
+        let direction = null;
+
+        if (previousClose !== null) {
+            priceChange = price - previousClose;
+            percentageChange = (priceChange / previousClose) * 100;
+            direction = priceChange > 0 ? 'up' : (priceChange < 0 ? 'down' : 'no-change');
+        }
+
+        return {
+            symbol,
+            price,
+            timestamp,
+            previousClose,
+            priceChange: priceChange !== null ? priceChange.toFixed(2) : null,
+            percentageChange: percentageChange !== null ? percentageChange.toFixed(2) : null,
+            direction
+        };
+    });
+
     socket.emit('initialData', initialData);
 });
 

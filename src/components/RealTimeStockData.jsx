@@ -1,15 +1,17 @@
+// RealTimeStockData.jsx
+
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import Subscribe from './Subscribe'; // Import the Subscribe component
 import StockCard from './StockCard';
 
 const RealTimeStockData = () => {
-    const [stockData, setStockData] = useState([]);
+    const [stockData, setStockData] = useState({});
     const [subscribedSymbols, setSubscribedSymbols] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const socket = io('http://localhost:4000');
+        const socket = io('http://localhost:4000'); // Adjust the URL if necessary
 
         // Fetch the current list of subscriptions
         const fetchSubscribedSymbols = async () => {
@@ -28,24 +30,23 @@ const RealTimeStockData = () => {
             console.log('Connected to server via Socket.IO');
         });
 
+        // Handle initial data load
         socket.on('initialData', (data) => {
-            setStockData(data);
+            // Transform the array into an object for easier access
+            const dataMap = {};
+            data.forEach(item => {
+                dataMap[item.symbol] = item;
+            });
+            setStockData(dataMap);
             setLoading(false);
         });
 
+        // Handle real-time stock data updates
         socket.on('stockData', (data) => {
-            setStockData((prevData) => {
-                const existingIndex = prevData.findIndex((item) => item.symbol === data.symbol);
-                if (existingIndex !== -1) {
-                    // Update existing symbol
-                    const updatedData = [...prevData];
-                    updatedData[existingIndex] = data;
-                    return updatedData;
-                } else {
-                    // Add new symbol
-                    return [...prevData, data];
-                }
-            });
+            setStockData((prevData) => ({
+                ...prevData,
+                [data.symbol]: data,
+            }));
         });
 
         socket.on('disconnect', () => {
@@ -70,14 +71,16 @@ const RealTimeStockData = () => {
             {subscribedSymbols.length === 0 ? (
                 <p>No symbols subscribed yet...</p>
             ) : (
-                subscribedSymbols.map((symbol) => {
-                    const stock = stockData.find((s) => s.symbol === symbol);
-                    return (
-                        <div key={symbol}>
-                            <StockCard symbol={symbol} stock={stock} />
-                        </div>
-                    );
-                })
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                    {subscribedSymbols.map((symbol) => {
+                        const stock = stockData[symbol];
+                        return (
+                            <div key={symbol}>
+                                <StockCard symbol={symbol} stock={stock} />
+                            </div>
+                        );
+                    })}
+                </div>
             )}
         </div>
     );

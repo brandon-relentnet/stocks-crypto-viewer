@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import Subscribe from './Subscribe'; // Import the Subscribe component
+import StockCard from './StockCard';
 
 const RealTimeStockData = () => {
     const [stockData, setStockData] = useState([]);
@@ -73,9 +74,7 @@ const RealTimeStockData = () => {
                     const stock = stockData.find((s) => s.symbol === symbol);
                     return (
                         <div key={symbol}>
-                            <h2>{symbol}</h2>
-                            <p>Price: {stock ? stock.price : 'No data available yet...'}</p>
-                            <p>Timestamp: {stock ? new Date(stock.timestamp).toLocaleTimeString() : ''}</p>
+                            <StockCard symbol={symbol} stock={stock} />
                         </div>
                     );
                 })

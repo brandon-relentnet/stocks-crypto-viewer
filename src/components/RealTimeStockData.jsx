@@ -1,8 +1,7 @@
 // RealTimeStockData.jsx
-
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import Subscribe from './Subscribe'; // Import the Subscribe component
+import Subscribe from './Subscribe'; 
 import StockCard from './StockCard';
 
 const RealTimeStockData = () => {
@@ -66,12 +65,13 @@ const RealTimeStockData = () => {
 
     return (
         <div>
-            <h1>Real-Time Stock Prices</h1>
+            <h2 className='mb-4 text-xl font-bold text-subtext1'>Subscribe to a Stock Symbol</h2>
             <Subscribe onSubscription={handleNewSubscription} />
+            <h2 className='mb-4 text-xl font-bold text-subtext1'>Real-Time Stock Prices</h2>
             {subscribedSymbols.length === 0 ? (
                 <p>No symbols subscribed yet...</p>
             ) : (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                <div className='flex flex-wrap gap-5'>
                     {subscribedSymbols.map((symbol) => {
                         const stock = stockData[symbol];
                         return (

@@ -62,12 +62,12 @@ const RealTimeStockData = () => {
     };
 
     if (loading) return <div>Loading...</div>;
-
+    
     return (
         <div>
-            <h2 className='mb-4 text-xl font-bold text-subtext1'>Subscribe to a Stock Symbol</h2>
+            <h2 className='mb-4 ml-1 text-xl font-bold text-subtext1'>Subscribe to a Stock Symbol</h2>
             <Subscribe onSubscription={handleNewSubscription} />
-            <h2 className='mb-4 text-xl font-bold text-subtext1'>Real-Time Stock Prices</h2>
+            <h2 className='mb-4 ml-1 text-xl font-bold text-subtext1'>Real-Time Stock Prices</h2>
             {subscribedSymbols.length === 0 ? (
                 <p>No symbols subscribed yet...</p>
             ) : (

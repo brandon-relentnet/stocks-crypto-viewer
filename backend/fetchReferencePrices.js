@@ -13,6 +13,7 @@ dotenv.config();
 const API_KEY = process.env.FINNHUB_API_KEY;
 const SUBSCRIPTIONS_FILE = path.resolve('./subscriptions.json');
 const REFERENCE_PRICES_FILE = path.resolve('./referencePrices.json');
+
 let DELAY_BETWEEN_CALLS_MS = 500;
 
 // Utility function to delay execution

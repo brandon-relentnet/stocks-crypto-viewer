@@ -36,7 +36,7 @@ const Subscribe = ({ onSubscription }) => {
     };
 
     return (
-        <div className='mb-6 bg-surface0 w-auto inline-block p-4'>
+        <div className='mb-6 bg-surface0 rounded shadow inline-block p-4'>
             <form onSubmit={handleSubscribe}>
                 <input
                     type="text"

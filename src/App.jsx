@@ -69,6 +69,7 @@ const App = () => {
       />
 
       <h1 className='text-6xl font-bold mb-24'>Scrollr Stocks Integration</h1>
+      
       <h2 className='mb-4 ml-1 text-xl font-bold text-subtext1'>Subscribe to a Stock Symbol</h2>
       <Subscribe 
         setSubscribedSymbols={setSubscribedSymbols}

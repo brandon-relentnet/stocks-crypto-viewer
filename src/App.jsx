@@ -8,7 +8,6 @@ import io from 'socket.io-client';
 const App = () => {
   const [subscribedSymbols, setSubscribedSymbols] = useState([]);
   const [stockData, setStockData] = useState({});
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const socket = io('http://localhost:4000'); // Adjust the URL if necessary
@@ -38,14 +37,13 @@ const App = () => {
         dataMap[item.symbol] = item;
       });
       setStockData(dataMap);
-      setLoading(false);
     });
 
     // Handle real-time stock data updates
     socket.on('stockData', (data) => {
       setStockData((prevData) => ({
         ...prevData,
-        [data.symbol]: data,
+        [data.symbol.toUpperCase()]: data,
       }));
     });
 
@@ -64,21 +62,24 @@ const App = () => {
 
   return (
     <div className='w-9/12 mx-auto my-40'>
-      <TradeSelection 
-        subscribedSymbols={subscribedSymbols} 
-      />
+      <div className='flex justify-center items-center gap-24 mb-24'>
+        <div>
+          <h1 className='text-6xl font-bold mb-24'>Scrollr Trades <br /> Integration</h1>
 
-      <h1 className='text-6xl font-bold mb-24'>Scrollr Stocks Integration</h1>
-      
-      <h2 className='mb-4 ml-1 text-xl font-bold text-subtext1'>Subscribe to a Stock Symbol</h2>
-      <Subscribe 
-        setSubscribedSymbols={setSubscribedSymbols}
-        onSubscription={handleNewSubscription}
-      />
+          <h2 className='mb-4 ml-1 text-xl font-bold text-subtext1'>Subscribe to a Trade Symbol</h2>
+          <Subscribe
+            setSubscribedSymbols={setSubscribedSymbols}
+            onSubscription={handleNewSubscription}
+          />
+        </div>
+        
+        <TradeSelection
+          subscribedSymbols={subscribedSymbols}
+        />
+      </div>
 
-      <RealTimeStockData 
-        subscribedSymbols={subscribedSymbols} 
-        loading={loading}
+      <RealTimeStockData
+        subscribedSymbols={subscribedSymbols}
         stockData={stockData}
       />
     </div>

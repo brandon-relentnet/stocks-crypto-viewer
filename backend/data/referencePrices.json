@@ -1,11 +1,395 @@
 [
   {
+    "symbol": "AAPL",
+    "currentPrice": 235.06,
+    "previousClose": 232.87,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "AAPL"
+  },
+  {
+    "symbol": "MSFT",
+    "currentPrice": 427.99,
+    "previousClose": 418.79,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "MSFT"
+  },
+  {
+    "symbol": "NVDA",
+    "currentPrice": 136.92,
+    "previousClose": 136.02,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "NVDA"
+  },
+  {
+    "symbol": "GOOGL",
+    "currentPrice": 169.12,
+    "previousClose": 167.65,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "GOOGL"
+  },
+  {
+    "symbol": "AMZN",
+    "currentPrice": 207.86,
+    "previousClose": 201.45,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "AMZN"
+  },
+  {
+    "symbol": "META",
+    "currentPrice": 573.54,
+    "previousClose": 565.11,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "META"
+  },
+  {
+    "symbol": "TSLA",
+    "currentPrice": 338.23,
+    "previousClose": 338.59,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "TSLA"
+  },
+  {
+    "symbol": "BRK.B",
+    "currentPrice": 478.56,
+    "previousClose": 477.43,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "BRK.B"
+  },
+  {
+    "symbol": "TSM",
+    "currentPrice": 183.84,
+    "previousClose": 185.08,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "TSM"
+  },
+  {
+    "symbol": "AVGO",
+    "currentPrice": 164.74,
+    "previousClose": 164.82,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "AVGO"
+  },
+  {
+    "symbol": "LLY",
+    "currentPrice": 789.32,
+    "previousClose": 755,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "LLY"
+  },
+  {
+    "symbol": "WMT",
+    "currentPrice": 91.31,
+    "previousClose": 89.5,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "WMT"
+  },
+  {
+    "symbol": "JPM",
+    "currentPrice": 249.97,
+    "previousClose": 250.29,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "JPM"
+  },
+  {
+    "symbol": "V",
+    "currentPrice": 311.82,
+    "previousClose": 313.19,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "V"
+  },
+  {
+    "symbol": "UNH",
+    "currentPrice": 606.79,
+    "previousClose": 605.83,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "UNH"
+  },
+  {
+    "symbol": "XOM",
+    "currentPrice": 117.97,
+    "previousClose": 119.97,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "XOM"
+  },
+  {
+    "symbol": "ORCL",
+    "currentPrice": 190.37,
+    "previousClose": 187.99,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "ORCL"
+  },
+  {
+    "symbol": "MA",
+    "currentPrice": 528.48,
+    "previousClose": 526.6,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "MA"
+  },
+  {
+    "symbol": "COST",
+    "currentPrice": 971.5,
+    "previousClose": 960.89,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "COST"
+  },
+  {
+    "symbol": "PG",
+    "currentPrice": 179.31,
+    "previousClose": 177.39,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "PG"
+  },
+  {
+    "symbol": "HD",
+    "currentPrice": 429.52,
+    "previousClose": 428.67,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "HD"
+  },
+  {
+    "symbol": "NFLX",
+    "currentPrice": 872.6,
+    "previousClose": 865.59,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "NFLX"
+  },
+  {
+    "symbol": "JNJ",
+    "currentPrice": 154.52,
+    "previousClose": 155.78,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "JNJ"
+  },
+  {
+    "symbol": "BAC",
+    "currentPrice": 47.75,
+    "previousClose": 47.5,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "BAC"
+  },
+  {
+    "symbol": "NVO",
+    "currentPrice": 106.13,
+    "previousClose": 104.56,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "NVO"
+  },
+  {
+    "symbol": "CRM",
+    "currentPrice": 343.18,
+    "previousClose": 339.11,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "CRM"
+  },
+  {
+    "symbol": "ABBV",
+    "currentPrice": 181.14,
+    "previousClose": 177.06,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "ABBV"
+  },
+  {
+    "symbol": "CVX",
+    "currentPrice": 162.53,
+    "previousClose": 160.36,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "CVX"
+  },
+  {
+    "symbol": "SAP",
+    "currentPrice": 235.06,
+    "previousClose": 233.81,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "SAP"
+  },
+  {
+    "symbol": "TMUS",
+    "currentPrice": 244.92,
+    "previousClose": 239.94,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "TMUS"
+  },
+  {
+    "symbol": "KO",
+    "currentPrice": 64.55,
+    "previousClose": 64.38,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "KO"
+  },
+  {
+    "symbol": "ASML",
+    "currentPrice": 671.97,
+    "previousClose": 684.47,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "ASML"
+  },
+  {
+    "symbol": "MRK",
+    "currentPrice": 101.62,
+    "previousClose": 101.16,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "MRK"
+  },
+  {
+    "symbol": "WFC",
+    "currentPrice": 77.35,
+    "previousClose": 76.9,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "WFC"
+  },
+  {
+    "symbol": "ACN",
+    "currentPrice": 363.18,
+    "previousClose": 361.29,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "ACN"
+  },
+  {
+    "symbol": "CSCO",
+    "currentPrice": 59.59,
+    "previousClose": 58.74,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "CSCO"
+  },
+  {
+    "symbol": "TM",
+    "currentPrice": 172.52,
+    "previousClose": 175.83,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "TM"
+  },
+  {
+    "symbol": "BX",
+    "currentPrice": 191.66,
+    "previousClose": 193.12,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "BX"
+  },
+  {
+    "symbol": "AMD",
+    "currentPrice": 137.72,
+    "previousClose": 141.13,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "AMD"
+  },
+  {
+    "symbol": "ADBE",
+    "currentPrice": 525.3,
+    "previousClose": 518.73,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "ADBE"
+  },
+  {
+    "symbol": "PEP",
+    "currentPrice": 162.16,
+    "previousClose": 163.05,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "PEP"
+  },
+  {
+    "symbol": "LIN",
+    "currentPrice": 456.6,
+    "previousClose": 455.69,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "LIN"
+  },
+  {
+    "symbol": "MS",
+    "currentPrice": 131.28,
+    "previousClose": 133.66,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "MS"
+  },
+  {
+    "symbol": "NOW",
+    "currentPrice": 1070.07,
+    "previousClose": 1052.71,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "NOW"
+  },
+  {
+    "symbol": "MCD",
+    "currentPrice": 296.33,
+    "previousClose": 296.19,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "MCD"
+  },
+  {
     "symbol": "DIS",
     "currentPrice": 115.45,
     "previousClose": 116,
     "timestamp": 1732654800,
     "type": "stock",
     "displaySymbol": "DIS"
+  },
+  {
+    "symbol": "NVS",
+    "currentPrice": 103.81,
+    "previousClose": 103.54,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "NVS"
+  },
+  {
+    "symbol": "PM",
+    "currentPrice": 132.28,
+    "previousClose": 130.71,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "PM"
+  },
+  {
+    "symbol": "AXP",
+    "currentPrice": 305.57,
+    "previousClose": 305.21,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "AXP"
   },
   {
     "symbol": "SCHW",
@@ -17,18 +401,18 @@
   },
   {
     "symbol": "BINANCE:BTCUSDT",
-    "currentPrice": 91672.61,
-    "previousClose": 93763.99,
-    "timestamp": 1732572016,
+    "currentPrice": 91996,
+    "previousClose": 93655.98,
+    "timestamp": 1732572283,
     "type": "crypto",
     "displaySymbol": "BTC/USDT"
   },
   {
-    "symbol": "AAPL",
-    "currentPrice": 235.06,
-    "previousClose": 232.87,
+    "symbol": "ETH",
+    "currentPrice": 31.29,
+    "previousClose": 33.07,
     "timestamp": 1732654800,
     "type": "stock",
-    "displaySymbol": "AAPL"
+    "displaySymbol": "ETH"
   }
 ]

@@ -2,16 +2,14 @@
 import React from 'react';
 import StockCard from './StockCard';
 
-const RealTimeStockData = ({ subscribedSymbols, loading, stockData }) => {
-    if (loading) return <div>Loading...</div>;
-    
+const RealTimeStockData = ({ subscribedSymbols, stockData }) => {
     return (
         <div>
-            <h2 className='mb-4 ml-1 text-xl font-bold text-subtext1'>Real-Time Stock Prices</h2>
+            <h2 className='mb-4 ml-1 text-xl font-bold text-subtext1 text-center'>Real-Time Stock Prices</h2>
             {subscribedSymbols.length === 0 ? (
                 <p>No symbols subscribed yet...</p>
             ) : (
-                <div className='flex flex-wrap gap-5'>
+                <div className='flex flex-wrap flex-grow justify-center gap-4'>
                     {subscribedSymbols.map((symbol) => {
                         const stock = stockData[symbol];
                         return (

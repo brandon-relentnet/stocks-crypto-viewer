@@ -14,5 +14,197 @@
   "AAPL": {
     "type": "stock",
     "displaySymbol": "AAPL"
+  },
+  "MSFT": {
+    "type": "stock",
+    "displaySymbol": "MSFT"
+  },
+  "NVDA": {
+    "type": "stock",
+    "displaySymbol": "NVDA"
+  },
+  "GOOGL": {
+    "type": "stock",
+    "displaySymbol": "GOOGL"
+  },
+  "AMZN": {
+    "type": "stock",
+    "displaySymbol": "AMZN"
+  },
+  "META": {
+    "type": "stock",
+    "displaySymbol": "META"
+  },
+  "TSLA": {
+    "type": "stock",
+    "displaySymbol": "TSLA"
+  },
+  "BRK.B": {
+    "type": "stock",
+    "displaySymbol": "BRK.B"
+  },
+  "TSM": {
+    "type": "stock",
+    "displaySymbol": "TSM"
+  },
+  "AVGO": {
+    "type": "stock",
+    "displaySymbol": "AVGO"
+  },
+  "LLY": {
+    "type": "stock",
+    "displaySymbol": "LLY"
+  },
+  "WMT": {
+    "type": "stock",
+    "displaySymbol": "WMT"
+  },
+  "JPM": {
+    "type": "stock",
+    "displaySymbol": "JPM"
+  },
+  "V": {
+    "type": "stock",
+    "displaySymbol": "V"
+  },
+  "UNH": {
+    "type": "stock",
+    "displaySymbol": "UNH"
+  },
+  "XOM": {
+    "type": "stock",
+    "displaySymbol": "XOM"
+  },
+  "ORCL": {
+    "type": "stock",
+    "displaySymbol": "ORCL"
+  },
+  "MA": {
+    "type": "stock",
+    "displaySymbol": "MA"
+  },
+  "COST": {
+    "type": "stock",
+    "displaySymbol": "COST"
+  },
+  "PG": {
+    "type": "stock",
+    "displaySymbol": "PG"
+  },
+  "HD": {
+    "type": "stock",
+    "displaySymbol": "HD"
+  },
+  "NFLX": {
+    "type": "stock",
+    "displaySymbol": "NFLX"
+  },
+  "JNJ": {
+    "type": "stock",
+    "displaySymbol": "JNJ"
+  },
+  "BAC": {
+    "type": "stock",
+    "displaySymbol": "BAC"
+  },
+  "NVO": {
+    "type": "stock",
+    "displaySymbol": "NVO"
+  },
+  "CRM": {
+    "type": "stock",
+    "displaySymbol": "CRM"
+  },
+  "ABBV": {
+    "type": "stock",
+    "displaySymbol": "ABBV"
+  },
+  "CVX": {
+    "type": "stock",
+    "displaySymbol": "CVX"
+  },
+  "SAP": {
+    "type": "stock",
+    "displaySymbol": "SAP"
+  },
+  "TMUS": {
+    "type": "stock",
+    "displaySymbol": "TMUS"
+  },
+  "KO": {
+    "type": "stock",
+    "displaySymbol": "KO"
+  },
+  "ASML": {
+    "type": "stock",
+    "displaySymbol": "ASML"
+  },
+  "MRK": {
+    "type": "stock",
+    "displaySymbol": "MRK"
+  },
+  "WFC": {
+    "type": "stock",
+    "displaySymbol": "WFC"
+  },
+  "ACN": {
+    "type": "stock",
+    "displaySymbol": "ACN"
+  },
+  "CSCO": {
+    "type": "stock",
+    "displaySymbol": "CSCO"
+  },
+  "TM": {
+    "type": "stock",
+    "displaySymbol": "TM"
+  },
+  "BX": {
+    "type": "stock",
+    "displaySymbol": "BX"
+  },
+  "AMD": {
+    "type": "stock",
+    "displaySymbol": "AMD"
+  },
+  "ADBE": {
+    "type": "stock",
+    "displaySymbol": "ADBE"
+  },
+  "PEP": {
+    "type": "stock",
+    "displaySymbol": "PEP"
+  },
+  "LIN": {
+    "type": "stock",
+    "displaySymbol": "LIN"
+  },
+  "MS": {
+    "type": "stock",
+    "displaySymbol": "MS"
+  },
+  "NOW": {
+    "type": "stock",
+    "displaySymbol": "NOW"
+  },
+  "MCD": {
+    "type": "stock",
+    "displaySymbol": "MCD"
+  },
+  "NVS": {
+    "type": "stock",
+    "displaySymbol": "NVS"
+  },
+  "PM": {
+    "type": "stock",
+    "displaySymbol": "PM"
+  },
+  "AXP": {
+    "type": "stock",
+    "displaySymbol": "AXP"
+  },
+  "ETH": {
+    "type": "stock",
+    "displaySymbol": "ETH"
   }
 }

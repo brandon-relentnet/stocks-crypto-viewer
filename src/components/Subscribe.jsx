@@ -36,13 +36,13 @@ const Subscribe = ({ onSubscription }) => {
     };
 
     return (
-        <div className='mb-6 bg-surface0 rounded shadow inline-block p-4'>
+        <div className='bg-surface0 rounded shadow inline-block p-4'>
             <form onSubmit={handleSubscribe}>
                 <input
                     type="text"
                     value={symbol}
                     onChange={(e) => setSymbol(e.target.value)}
-                    placeholder="Enter stock symbol (e.g., AAPL)"
+                    placeholder="Enter trade symbol"
                     className='bg-surface1 py-2 px-4 rounded shadow mr-4 border-2 border-surface1 focus:outline-none focus:border-accent hover:shadow-lg focus:shadow-2xl hover:border-surface2 transition duration-300'
                 />
                 <button className='bg-surface1 py-4 px-8 rounded shadow text-subtext0 hover:bg-surface2 active:bg-accent hover:text-text active:text-base hover:shadow-lg active:shadow-2xl transition duration-300' type="submit">Subscribe</button>

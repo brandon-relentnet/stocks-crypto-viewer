@@ -1,0 +1,18 @@
+{
+  "DIS": {
+    "type": "stock",
+    "displaySymbol": "DIS"
+  },
+  "SCHW": {
+    "type": "stock",
+    "displaySymbol": "SCHW"
+  },
+  "BINANCE:BTCUSDT": {
+    "type": "crypto",
+    "displaySymbol": "BTC/USDT"
+  },
+  "AAPL": {
+    "type": "stock",
+    "displaySymbol": "AAPL"
+  }
+}

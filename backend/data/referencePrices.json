@@ -1,308 +1,34 @@
 [
   {
-    "symbol": "AAPL",
-    "currentPrice": 235.06,
-    "previousClose": 232.87,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "MSFT",
-    "currentPrice": 427.99,
-    "previousClose": 418.79,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "NVDA",
-    "currentPrice": 136.92,
-    "previousClose": 136.02,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "GOOGL",
-    "currentPrice": 169.12,
-    "previousClose": 167.65,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "AMZN",
-    "currentPrice": 207.86,
-    "previousClose": 201.45,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "META",
-    "currentPrice": 573.54,
-    "previousClose": 565.11,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "TSLA",
-    "currentPrice": 338.23,
-    "previousClose": 338.59,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "BRK.B",
-    "currentPrice": 478.56,
-    "previousClose": 477.43,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "TSM",
-    "currentPrice": 183.84,
-    "previousClose": 185.08,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "AVGO",
-    "currentPrice": 164.74,
-    "previousClose": 164.82,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "LLY",
-    "currentPrice": 789.32,
-    "previousClose": 755,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "WMT",
-    "currentPrice": 91.31,
-    "previousClose": 89.5,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "JPM",
-    "currentPrice": 249.97,
-    "previousClose": 250.29,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "V",
-    "currentPrice": 311.82,
-    "previousClose": 313.19,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "UNH",
-    "currentPrice": 606.79,
-    "previousClose": 605.83,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "XOM",
-    "currentPrice": 117.97,
-    "previousClose": 119.97,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "ORCL",
-    "currentPrice": 190.37,
-    "previousClose": 187.99,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "MA",
-    "currentPrice": 528.48,
-    "previousClose": 526.6,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "COST",
-    "currentPrice": 971.5,
-    "previousClose": 960.89,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "PG",
-    "currentPrice": 179.31,
-    "previousClose": 177.39,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "HD",
-    "currentPrice": 429.52,
-    "previousClose": 428.67,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "NFLX",
-    "currentPrice": 872.6,
-    "previousClose": 865.59,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "JNJ",
-    "currentPrice": 154.52,
-    "previousClose": 155.78,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "BAC",
-    "currentPrice": 47.75,
-    "previousClose": 47.5,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "NVO",
-    "currentPrice": 106.13,
-    "previousClose": 104.56,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "CRM",
-    "currentPrice": 343.18,
-    "previousClose": 339.11,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "ABBV",
-    "currentPrice": 181.14,
-    "previousClose": 177.06,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "CVX",
-    "currentPrice": 162.53,
-    "previousClose": 160.36,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "SAP",
-    "currentPrice": 235.06,
-    "previousClose": 233.81,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "TMUS",
-    "currentPrice": 244.92,
-    "previousClose": 239.94,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "KO",
-    "currentPrice": 64.55,
-    "previousClose": 64.38,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "ASML",
-    "currentPrice": 671.97,
-    "previousClose": 684.47,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "MRK",
-    "currentPrice": 101.62,
-    "previousClose": 101.16,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "WFC",
-    "currentPrice": 77.35,
-    "previousClose": 76.9,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "ACN",
-    "currentPrice": 363.18,
-    "previousClose": 361.29,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "CSCO",
-    "currentPrice": 59.59,
-    "previousClose": 58.74,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "TM",
-    "currentPrice": 172.52,
-    "previousClose": 175.83,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "BX",
-    "currentPrice": 191.66,
-    "previousClose": 193.12,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "AMD",
-    "currentPrice": 137.72,
-    "previousClose": 141.13,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "ADBE",
-    "currentPrice": 525.3,
-    "previousClose": 518.73,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "PEP",
-    "currentPrice": 162.16,
-    "previousClose": 163.05,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "LIN",
-    "currentPrice": 456.6,
-    "previousClose": 455.69,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "MS",
-    "currentPrice": 131.28,
-    "previousClose": 133.66,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "NOW",
-    "currentPrice": 1070.07,
-    "previousClose": 1052.71,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "MCD",
-    "currentPrice": 296.33,
-    "previousClose": 296.19,
-    "timestamp": 1732654800
-  },
-  {
     "symbol": "DIS",
     "currentPrice": 115.45,
     "previousClose": 116,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "NVS",
-    "currentPrice": 103.81,
-    "previousClose": 103.54,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "PM",
-    "currentPrice": 132.28,
-    "previousClose": 130.71,
-    "timestamp": 1732654800
-  },
-  {
-    "symbol": "AXP",
-    "currentPrice": 305.57,
-    "previousClose": 305.21,
-    "timestamp": 1732654800
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "DIS"
   },
   {
     "symbol": "SCHW",
     "currentPrice": 82.25,
     "previousClose": 81.77,
-    "timestamp": 1732654800
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "SCHW"
   },
   {
     "symbol": "BINANCE:BTCUSDT",
-    "currentPrice": 91674.64,
-    "previousClose": 94791.52,
-    "timestamp": 1732569874
+    "currentPrice": 91672.61,
+    "previousClose": 93763.99,
+    "timestamp": 1732572016,
+    "type": "crypto",
+    "displaySymbol": "BTC/USDT"
+  },
+  {
+    "symbol": "AAPL",
+    "currentPrice": 235.06,
+    "previousClose": 232.87,
+    "timestamp": 1732654800,
+    "type": "stock",
+    "displaySymbol": "AAPL"
   }
 ]

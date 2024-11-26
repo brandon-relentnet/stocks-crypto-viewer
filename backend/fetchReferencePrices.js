@@ -12,8 +12,7 @@ dotenv.config();
 const API_KEY = process.env.FINNHUB_API_KEY;
 const SUBSCRIPTIONS_FILE = path.resolve('./data/subscriptions.json');
 const REFERENCE_PRICES_FILE = path.resolve('./data/referencePrices.json');
-const DISPLAY_SYMBOLS_FILE = path.resolve('./data/displaySymbols.json');
-const MERGED_DATASET_FILE = path.resolve('./data/mergedDataset.json');
+const SYMBOL_DATA_FILE = path.resolve('./data/symbolData.json');
 const DELAY_BETWEEN_CALLS_MS = 500; // Increased delay to mitigate rate limiting
 const RETRY_DELAY_MS = 10000; // Retry delay in case of rate limiting
 const MAX_RETRIES = 3; // Maximum number of retries on failure
@@ -81,97 +80,49 @@ async function getStockReferencePrice(symbol) {
     return null;
 }
 
-
-// Function to determine the type of symbol
-async function determineSymbolType(symbol) {
-    const searchURL = `https://finnhub.io/api/v1/search?q=${symbol}&token=${API_KEY}`;
+// Function to read symbol data cache
+async function readSymbolDataCache() {
     try {
-        const data = await fetch(searchURL).then(res => res.json());
-        if (data.result && data.result.length > 0) {
-            const matchingSymbol = data.result.find(item => item.symbol === symbol);
-            if (matchingSymbol) {
-                const type = matchingSymbol.type;
-                if (type === 'Crypto') {
-                    return 'crypto';
-                } else {
-                    return 'stock';
-                }
-            }
-        }
+        const data = await fs.readFile(SYMBOL_DATA_FILE, 'utf-8');
+        return JSON.parse(data);
     } catch (error) {
-        console.error(`[${new Date().toLocaleTimeString()}] Error determining type for ${symbol}: ${error.message}`);
+        // If file doesn't exist, return empty object
+        return {};
     }
-    return 'stock'; // Default to stock if not found
 }
 
-// Function to fetch display symbol based on type
-async function getDisplaySymbol(symbol, type) {
+// Function to save symbol data cache
+async function saveSymbolDataCache(symbolData) {
+    try {
+        await fs.writeFile(SYMBOL_DATA_FILE, JSON.stringify(symbolData, null, 2));
+        console.log(`[${new Date().toLocaleTimeString()}] Symbol data cache saved to ${SYMBOL_DATA_FILE}`);
+    } catch (error) {
+        console.error(`[${new Date().toLocaleTimeString()}] Error saving symbol data cache: ${error.message}`);
+    }
+}
+
+// Modified function to get or fetch symbol data
+async function getSymbolData(symbol, symbolDataCache) {
+    if (symbolDataCache[symbol]) {
+        return symbolDataCache[symbol];
+    }
+
     const searchURL = `https://finnhub.io/api/v1/search?q=${symbol}&token=${API_KEY}`;
-    const data = await fetchWithRetries(searchURL, symbol, 'display symbol');
+    const data = await fetchWithRetries(searchURL, symbol, 'symbol data');
+
     if (data && data.result && data.result.length > 0) {
         const matchingSymbol = data.result.find(item => item.symbol === symbol);
         if (matchingSymbol) {
-            return {
-                symbol: symbol,
-                displaySymbol: matchingSymbol.displaySymbol || matchingSymbol.description || matchingSymbol.symbol, // Use appropriate field
-            };
+            const type = matchingSymbol.type === 'Crypto' ? 'crypto' : 'stock';
+            const displaySymbol = matchingSymbol.displaySymbol || matchingSymbol.description || matchingSymbol.symbol;
+
+            const symbolData = { type, displaySymbol };
+            symbolDataCache[symbol] = symbolData; // Update cache
+            return symbolData;
         }
     }
+
     return null;
-}
-
-// Processing symbols with type classification
-async function processSymbolsWithType(symbols, fetchFunction, resultHandler, taskName) {
-    const results = [];
-    for (const symbol of symbols) {
-        console.log(`[${new Date().toLocaleTimeString()}] Starting ${taskName} for ${symbol}...`);
-
-        const type = await determineSymbolType(symbol);
-        const result = await fetchFunction(symbol, type);
-
-        if (result) {
-            results.push({ ...result, type });
-            console.log(`[${new Date().toLocaleTimeString()}] Completed ${taskName} for ${symbol}`);
-        } else {
-            console.warn(`[${new Date().toLocaleTimeString()}] Skipped ${taskName} for ${symbol} due to errors.`);
-        }
-
-        await delay(DELAY_BETWEEN_CALLS_MS);
-    }
-    await resultHandler(results);
-}
-
-// Function to merge display symbols with reference prices
-async function mergeDatasets() {
-    try {
-        // Load both datasets
-        const [displaySymbols, referencePrices] = await Promise.all([
-            fs.readFile(DISPLAY_SYMBOLS_FILE, 'utf-8').then(JSON.parse),
-            fs.readFile(REFERENCE_PRICES_FILE, 'utf-8').then(JSON.parse),
-        ]);
-
-        // Merge datasets by matching `symbol`
-        const merged = referencePrices.map((refPrice) => {
-            const match = displaySymbols.find((dispSymbol) => dispSymbol.symbol === refPrice.symbol);
-
-            // Merge display symbol if found
-            if (match) {
-                return {
-                    ...refPrice,
-                    displaySymbol: match.displaySymbol,
-                };
-            }
-
-            // If no match, return reference price as-is
-            return refPrice;
-        });
-
-        // Save the merged dataset
-        await fs.writeFile(MERGED_DATASET_FILE, JSON.stringify(merged, null, 2));
-        console.log(`Merged dataset saved to ${MERGED_DATASET_FILE}`);
-    } catch (error) {
-        console.error(`Error merging datasets: ${error.message}`);
-    }
 }
 
 // Function to save reference prices to a JSON file
@@ -183,17 +134,6 @@ async function saveReferencePrices(prices) {
         console.log(`[${new Date().toLocaleTimeString()}] Reference prices saved to ${REFERENCE_PRICES_FILE}`);
     } catch (error) {
         console.error(`[${new Date().toLocaleTimeString()}] Error saving reference prices: ${error.message}`);
-    }
-}
-
-
-// Function to save display symbols to a JSON file
-async function saveDisplaySymbols(displaySymbols) {
-    try {
-        await fs.writeFile(DISPLAY_SYMBOLS_FILE, JSON.stringify(displaySymbols, null, 2));
-        console.log(`[${new Date().toLocaleTimeString()}] Display symbols saved to ${DISPLAY_SYMBOLS_FILE}`);
-    } catch (error) {
-        console.error(`[${new Date().toLocaleTimeString()}] Error saving display symbols: ${error.message}`);
     }
 }
 
@@ -209,17 +149,42 @@ async function updateReferencePrices() {
 
     console.log(`[${new Date().toLocaleTimeString()}] Total number of symbols subscribed: ${symbols.length}`);
 
-    // Process reference prices
-    await processSymbolsWithType(symbols, async (symbol) => {
-        const type = await determineSymbolType(symbol); // Determine type
-        return getStockReferencePrice(symbol); // Fetch reference price
-    }, saveReferencePrices, 'reference pricing');
+    // Load symbol data cache
+    const symbolDataCache = await readSymbolDataCache();
 
-    // Process display symbols
-    await processSymbolsWithType(symbols, getDisplaySymbol, saveDisplaySymbols, 'display symbol fetching');
+    const referencePrices = [];
 
-    // Merge datasets
-    await mergeDatasets();
+    for (const symbol of symbols) {
+        console.log(`[${new Date().toLocaleTimeString()}] Processing ${symbol}...`);
+
+        const symbolData = await getSymbolData(symbol, symbolDataCache);
+
+        if (!symbolData) {
+            console.warn(`[${new Date().toLocaleTimeString()}] Skipped ${symbol} due to missing symbol data.`);
+            continue;
+        }
+
+        // Fetch reference price
+        const refPrice = await getStockReferencePrice(symbol);
+        if (refPrice) {
+            referencePrices.push({
+                ...refPrice,
+                type: symbolData.type,
+                displaySymbol: symbolData.displaySymbol,
+            });
+            console.log(`[${new Date().toLocaleTimeString()}] Fetched data for ${symbol}`);
+        } else {
+            console.warn(`[${new Date().toLocaleTimeString()}] Skipped reference price fetching for ${symbol} due to errors.`);
+        }
+
+        await delay(DELAY_BETWEEN_CALLS_MS);
+    }
+
+    // Save reference prices
+    await saveReferencePrices(referencePrices);
+
+    // Always save the updated symbol data cache
+    await saveSymbolDataCache(symbolDataCache);
 
     console.log(`=== Update Completed at ${new Date().toLocaleString()} ===\n`);
 }

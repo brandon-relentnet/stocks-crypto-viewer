@@ -43,14 +43,14 @@ const io = socketIo(server, {
 });
 
 // File to store active subscriptions
-const SUBSCRIPTIONS_FILE = path.join(__dirname, 'subscriptions.json');
+const SUBSCRIPTIONS_FILE = path.join(__dirname, './data/subscriptions.json');
 
 // Store dynamically subscribed stock symbols and the latest prices
 const activeSubscriptions = new Set();
 const latestPrices = {};
 
 // Path to referencePrices.json
-const REFERENCE_PRICES_FILE = path.join(__dirname, 'referencePrices.json');
+const REFERENCE_PRICES_FILE = path.join(__dirname, './data/referencePrices.json');
 
 // In-memory store for reference prices
 let referencePricesMap = new Map();
